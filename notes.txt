@@ -1,0 +1,42 @@
+* Machine
+    - Display
+    - Balance
+    - Inventory
+        - Product, Quantity
+    - Bank
+        - Currencies
+    - Coin Return
+        - Coins
+
+* Coin
+    - Weight
+    - Size
+
+* Machine operations
+    - Check display?
+    - Insert coin
+    - Coin return
+    - Vend product
+
+machine(display, balance, inventory, bank, coin_return) -> machine
+check_display(machine) -> machine
+insert_coin(machine, coin) -> machine
+return_coins(machine) -> machine
+vend(machine, product) -> machine
+
+inventory(stock...) -> inventory
+stock(product, quantity) -> stock
+product(name, price) -> product
+coin_return(coin) -> coin_return
+coin(weight, size) -> coin
+currency(type, value) -> currency
+
+bank(currency...) -> bank
+update_bank(bank, currency) -> bank
+
+"Coin" is a separate concept from Currency.
+Need some kind of fake classification for coins.  Here we go:
+Coin size and weight:
+    Nickel  Medium  Heavy
+    Dime    Small   Light
+    Quarter Large   Heavy
