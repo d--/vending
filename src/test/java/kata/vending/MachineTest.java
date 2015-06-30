@@ -8,9 +8,18 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Unit tests for the vending machine.
+ */
 public class MachineTest {
+    /**
+     * Test that when invalid coins (coins with no classification) are
+     * inserted, they go into the coin return of the machine.
+     *
+     * Test that valid coins do not end up with them.
+     */
     @Test
-    public void whenInsertInvalidCoinsWithValidCoinsInvalidCoinsGoIntoCoinReturn() {
+    public final void whenInsertInvalidCoinsTheyGoIntoCoinReturn() {
         Machine machine = new Machine(Collections.<Coin>emptyList());
         Coin lead = new Coin(Coin.Size.SMALL, Coin.Weight.HEAVY);
         Coin nickel = new Coin(Coin.Size.MEDIUM, Coin.Weight.HEAVY);

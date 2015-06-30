@@ -1,30 +1,1 @@
-package kata.vending;
-
-public final class Coin {
-    public enum Size {
-        SMALL,
-        MEDIUM,
-        LARGE
-    }
-
-    public enum Weight {
-        LIGHT,
-        HEAVY
-    }
-
-    private final Coin.Size size;
-    private final Coin.Weight weight;
-
-    public Size getSize() {
-        return size;
-    }
-
-    public Weight getWeight() {
-        return weight;
-    }
-
-    public Coin(Coin.Size size, Coin.Weight weight) {
-        this.size = size;
-        this.weight = weight;
-    }
-}
+package kata.vending;/** * Coin class used to represent an abstract idea of a coin. * Immutable. */public final class Coin {    /**     * Possible coin sizes.     */    public enum Size {        /**         * Small.         */        SMALL,        /**         * Medium.         */        MEDIUM,        /**         * Large.         */        LARGE    }    /**     * Possible coin weights.     */    public enum Weight {        /**         * Light.         */        LIGHT,        /**         * Heavy.         */        HEAVY    }    /**     * The size of the coin.     */    private final Coin.Size size;    public Size getSize() {        return size;    }    /**     * The weight of the coin.     */    private final Coin.Weight weight;    public Weight getWeight() {        return weight;    }    /**     * Coin constructor.     * @param size size of the coin     * @param weight weight of the coin     */    public Coin(final Coin.Size size, final Coin.Weight weight) {        this.size = size;        this.weight = weight;    }}

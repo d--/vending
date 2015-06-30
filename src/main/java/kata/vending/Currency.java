@@ -1,24 +1,1 @@
-package kata.vending;
-
-public enum Currency {
-    NICKEL,
-    DIME,
-    QUARTER,
-    UNKNOWN;
-
-    public static Currency toCurrency(Coin coin) {
-        if (coin.getWeight() == Coin.Weight.LIGHT &&
-                coin.getSize() == Coin.Size.SMALL) {
-            return DIME;
-        }
-        if (coin.getWeight() == Coin.Weight.HEAVY &&
-                coin.getSize() == Coin.Size.MEDIUM) {
-            return NICKEL;
-        }
-        if (coin.getWeight() == Coin.Weight.HEAVY &&
-                coin.getSize() == Coin.Size.LARGE) {
-            return QUARTER;
-        }
-        return UNKNOWN;
-    }
-}
+package kata.vending;/** * Represents the various types of currency and contains coin conversion logic. */public enum Currency {    /**     * Nickel.     */    NICKEL,    /**     * Dime.     */    DIME,    /**     * Quarter.     */    QUARTER,    /**     * Any other type of coin or currency that we aren't aware of.     */    UNKNOWN;    /**     * Classifies a coin of some size and weight as the appropriate currency.     * @param coin coin to assess     * @return the appropriate currency classification for the coin     */    public static Currency toCurrency(final Coin coin) {        if (coin.getWeight() == Coin.Weight.LIGHT                && coin.getSize() == Coin.Size.SMALL) {            return DIME;        }        if (coin.getWeight() == Coin.Weight.HEAVY                && coin.getSize() == Coin.Size.MEDIUM) {            return NICKEL;        }        if (coin.getWeight() == Coin.Weight.HEAVY                && coin.getSize() == Coin.Size.LARGE) {            return QUARTER;        }        return UNKNOWN;    }}
