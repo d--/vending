@@ -20,6 +20,8 @@ Just a scratch file for thinking with a keyboard...
     - Coin return
     - Vend product
 
+--
+
 machine(display, balance, inventory, bank, coin_return) -> machine
 check_display(machine) -> machine
 insert_coin(machine, coin) -> machine
@@ -36,12 +38,16 @@ currency(type, value) -> currency
 bank(currency...) -> bank
 update_bank(bank, currency) -> bank
 
+--
+
 "Coin" is a separate concept from Currency.
 Need some kind of fake classification for coins.  Here we go:
 Coin size and weight:
     Nickel  Medium  Heavy
     Dime    Small   Light
     Quarter Large   Heavy
+
+--
 
 "Balance" is a separate bank object.  Once any transaction has happened on the
 balance, the balance gets committed to the machine bank and any coin return
@@ -52,5 +58,13 @@ and quarters.
 
 ...In fact, a "Bank" can hold any amount of any currency.
 
+So we'll have two separate banks.  One for the customer, one for the machine.
+
+--
+
 Though completely covered, Currency and Machine have reasonably high cyclomatic
 complexity.  See if we can reduce this.
+
+It would probably be better to use a bidirectional map from Guava for the
+coin/currency mapping.  Refactor this?  For now, tie each coin property pair
+to its enum.

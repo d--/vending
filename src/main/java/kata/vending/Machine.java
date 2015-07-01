@@ -16,7 +16,7 @@ public final class Machine {
      */
     private final List<Coin> coinReturn;
     public List<Coin> getCoinReturn() {
-        return coinReturn;
+        return Collections.unmodifiableList(coinReturn);
     }
 
     /**
@@ -118,5 +118,30 @@ public final class Machine {
         } else {
             return customerBank.balanceAsString();
         }
+    }
+
+    /**
+     * Returns any coins that are in the customer bank to the coin return.
+     * @return machine with appropriate coin return and customer bank
+     */
+    public Machine returnCoins() {
+        final List<Coin> tmpCoinReturn = new ArrayList<>();
+        tmpCoinReturn.addAll(this.coinReturn);
+
+        final Map<Currency, Integer> bankMap = customerBank.getCurrencies();
+        for (Map.Entry<Currency, Integer> entry : bankMap.entrySet()) {
+            for (int i = 0; i < entry.getValue(); i++) {
+                tmpCoinReturn.add(entry.getKey().getCoin());
+            }
+        }
+
+        final List<Coin> updatedCoinReturn =
+            Collections.unmodifiableList(tmpCoinReturn);
+        final Bank updatedCustomerBank =
+            new Bank(Collections.<Currency, Integer>emptyMap());
+        return new Builder()
+            .coinReturn(updatedCoinReturn)
+            .customerBank(updatedCustomerBank)
+            .build();
     }
 }

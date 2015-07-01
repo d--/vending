@@ -1,5 +1,6 @@
 package kata.vending;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ public final class Bank {
      */
     private final Map<Currency, Integer> currencies;
     public Map<Currency, Integer> getCurrencies() {
-        return currencies;
+        return Collections.unmodifiableMap(currencies);
     }
 
     /**

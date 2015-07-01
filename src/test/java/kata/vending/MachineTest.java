@@ -19,29 +19,24 @@ public class MachineTest {
     private Machine machine;
 
     /**
-     * Lead coin; not a currency.
-     */
-    private Coin lead = new Coin(Coin.Size.SMALL, Coin.Weight.HEAVY);
-
-    /**
      * Penny coin; not a currency.
      */
-    private Coin penny = new Coin(Coin.Size.MEDIUM, Coin.Weight.LIGHT);
+    private Coin penny = Currency.UNKNOWN.getCoin();
 
     /**
      * Nickel coin.
      */
-    private Coin nickel = new Coin(Coin.Size.MEDIUM, Coin.Weight.HEAVY);
+    private Coin nickel = Currency.NICKEL.getCoin();
 
     /**
      * Dime coin.
      */
-    private Coin dime = new Coin(Coin.Size.SMALL, Coin.Weight.LIGHT);
+    private Coin dime = Currency.DIME.getCoin();
 
     /**
      * Quarter coin.
      */
-    private Coin quarter = new Coin(Coin.Size.LARGE, Coin.Weight.HEAVY);
+    private Coin quarter = Currency.QUARTER.getCoin();
 
     /**
      * Set up a blank machine before each test.
@@ -66,7 +61,7 @@ public class MachineTest {
     @Test
     public final void whenInsertInvalidCoinsTheyGoIntoCoinReturn() {
         final List<Coin> coinReturn = machine
-                .insertCoin(lead)
+                .insertCoin(penny)
                 .insertCoin(nickel)
                 .insertCoin(dime)
                 .insertCoin(quarter)
@@ -74,7 +69,6 @@ public class MachineTest {
                 .getCoinReturn();
         assertEquals(2, coinReturn.size());
         assertTrue(coinReturn.contains(penny));
-        assertTrue(coinReturn.contains(lead));
     }
 
     /**
@@ -126,12 +120,31 @@ public class MachineTest {
     @Test
     public final void whenInsertMixedValidInvalidCoinsDisplayCorrect() {
         final String display = machine
-                .insertCoin(lead)
+                .insertCoin(penny)
                 .insertCoin(quarter)
                 .insertCoin(dime)
                 .insertCoin(nickel)
                 .insertCoin(penny)
                 .checkDisplay();
         assertEquals("$0.40", display);
+    }
+
+    /**
+     * Test that when the coin return is pressed, the customer coins are
+     * returned.
+     */
+    @Test
+    public final void whenInsertCoinsCoinReturnReturnsCoins() {
+        Machine filled = machine
+            .insertCoin(penny)
+            .insertCoin(quarter)
+            .insertCoin(dime)
+            .insertCoin(nickel);
+        Machine returned = filled.returnCoins();
+        List<Coin> coinReturn = returned.getCoinReturn();
+        assertTrue(coinReturn.contains(penny));
+        assertTrue(coinReturn.contains(quarter));
+        assertTrue(coinReturn.contains(dime));
+        assertTrue(coinReturn.contains(nickel));
     }
 }
