@@ -99,9 +99,12 @@ public final class Machine {
             currencies.put(coinCurrency, numOfCurrencyInCustomerBank + 1);
         }
 
+        final List<Coin> updatedCoinReturn =
+                Collections.unmodifiableList(tmpCoinReturn);
+        final Bank updatedCustomerBank = new Bank(currencies);
         return new Builder()
-                .coinReturn(Collections.unmodifiableList(tmpCoinReturn))
-                .customerBank(new Bank(currencies))
+                .coinReturn(updatedCoinReturn)
+                .customerBank(updatedCustomerBank)
                 .build();
     }
 

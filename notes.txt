@@ -51,3 +51,6 @@ In fact, a "Bank" object can hold any arbitrary combination of nickels, dimes,
 and quarters.
 
 ...In fact, a "Bank" can hold any amount of any currency.
+
+Though completely covered, Currency and Machine have reasonably high cyclomatic
+complexity.  See if we can reduce this.

@@ -118,4 +118,20 @@ public class MachineTest {
         final Machine four = three.insertCoin(dime);
         assertEquals("$0.50", four.checkDisplay());
     }
+
+    /**
+     * Test that when a mix of coins is inserted, the valid ones create a valid
+     * display.
+     */
+    @Test
+    public final void whenInsertMixedValidInvalidCoinsDisplayCorrect() {
+        final String display = machine
+                .insertCoin(lead)
+                .insertCoin(quarter)
+                .insertCoin(dime)
+                .insertCoin(nickel)
+                .insertCoin(penny)
+                .checkDisplay();
+        assertEquals("$0.40", display);
+    }
 }
