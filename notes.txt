@@ -42,3 +42,12 @@ Coin size and weight:
     Nickel  Medium  Heavy
     Dime    Small   Light
     Quarter Large   Heavy
+
+"Balance" is a separate bank object.  Once any transaction has happened on the
+balance, the balance gets committed to the machine bank and any coin return
+will pull from the machine bank instead of the balance.
+
+In fact, a "Bank" object can hold any arbitrary combination of nickels, dimes,
+and quarters.
+
+...In fact, a "Bank" can hold any amount of any currency.
