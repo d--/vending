@@ -42,16 +42,6 @@ public class CoinTest {
     }
 
     /**
-     * Test hashcode gives the same hash for similar items.
-     */
-    @Test
-    public final void whenSimilarItemsHashcodeIsSame() {
-        Coin a = new Coin(Coin.Size.LARGE, Coin.Weight.HEAVY);
-        Coin b = new Coin(Coin.Size.LARGE, Coin.Weight.HEAVY);
-        assertEquals(a.hashCode(), b.hashCode());
-    }
-
-    /**
      * Test that equals doesn't blow up when a coin has null properties.
      */
     @Test
@@ -59,6 +49,16 @@ public class CoinTest {
         Coin a = new Coin(Coin.Size.LARGE, null);
         Coin b = new Coin(null, Coin.Weight.HEAVY);
         assertFalse(a.equals(b) || b.equals(a));
+    }
+
+    /**
+     * Test hashcode gives the same hash for similar items.
+     */
+    @Test
+    public final void whenSimilarItemsHashcodeIsSame() {
+        Coin a = new Coin(Coin.Size.LARGE, Coin.Weight.HEAVY);
+        Coin b = new Coin(Coin.Size.LARGE, Coin.Weight.HEAVY);
+        assertEquals(a.hashCode(), b.hashCode());
     }
 
     /**

@@ -3,7 +3,6 @@ package kata.vending;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -43,13 +42,7 @@ public class MachineTest {
      */
     @Before
     public final void setUpBlankMachine() {
-        final List<Coin> emptyCoinReturn = Collections.emptyList();
-        final Bank emptyBank =
-                new Bank(Collections.<Currency, Integer>emptyMap());
-        machine = new Machine.Builder()
-                .customerBank(emptyBank)
-                .coinReturn(emptyCoinReturn)
-                .build();
+        machine = new Machine.Builder().build();
     }
 
     /**
@@ -77,7 +70,7 @@ public class MachineTest {
      */
     @Test
     public final void whenMachineBalanceIsZeroDisplayInsertCoin() {
-        assertEquals("INSERT COIN", machine.checkDisplay());
+        assertEquals("INSERT COIN", machine.getDisplay());
     }
 
     /**
@@ -94,7 +87,7 @@ public class MachineTest {
                 .insertCoin(dime)
                 .insertCoin(nickel);
 
-        assertEquals("$1.00", filled.checkDisplay());
+        assertEquals("$1.00", filled.getDisplay());
     }
 
     /**
@@ -104,13 +97,13 @@ public class MachineTest {
     @Test
     public final void whenInsertValidCoinsSuccessivelyDisplayIsCorrect() {
         final Machine one = machine.insertCoin(quarter);
-        assertEquals("$0.25", one.checkDisplay());
+        assertEquals("$0.25", one.getDisplay());
         final Machine two = one.insertCoin(nickel);
-        assertEquals("$0.30", two.checkDisplay());
+        assertEquals("$0.30", two.getDisplay());
         final Machine three = two.insertCoin(dime);
-        assertEquals("$0.40", three.checkDisplay());
+        assertEquals("$0.40", three.getDisplay());
         final Machine four = three.insertCoin(dime);
-        assertEquals("$0.50", four.checkDisplay());
+        assertEquals("$0.50", four.getDisplay());
     }
 
     /**
@@ -119,14 +112,13 @@ public class MachineTest {
      */
     @Test
     public final void whenInsertMixedValidInvalidCoinsDisplayCorrect() {
-        final String display = machine
+        final Machine filled = machine
                 .insertCoin(penny)
                 .insertCoin(quarter)
                 .insertCoin(dime)
                 .insertCoin(nickel)
-                .insertCoin(penny)
-                .checkDisplay();
-        assertEquals("$0.40", display);
+                .insertCoin(penny);
+        assertEquals("$0.40", filled.getDisplay());
     }
 
     /**
