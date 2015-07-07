@@ -1,12 +1,10 @@
 package kata.vending;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Unit tests for the vending machine.
@@ -15,7 +13,7 @@ public class MachineTest {
     /**
      * A machine to set up for tests.
      */
-    private Machine machine;
+    private final Machine machine = new Machine.Builder().build();
 
     /**
      * Penny coin; not a currency.
@@ -38,14 +36,6 @@ public class MachineTest {
     private Coin quarter = Currency.QUARTER.getCoin();
 
     /**
-     * Set up a blank machine before each test.
-     */
-    @Before
-    public final void setUpBlankMachine() {
-        machine = new Machine.Builder().build();
-    }
-
-    /**
      * Test that when invalid coins (coins with no classification) are
      * inserted, they go into the coin return of the machine.
      *
@@ -53,15 +43,15 @@ public class MachineTest {
      */
     @Test
     public final void whenInsertInvalidCoinsTheyGoIntoCoinReturn() {
-        final List<Coin> coinReturn = machine
+        final Bank coinReturn = machine
                 .insertCoin(penny)
                 .insertCoin(nickel)
                 .insertCoin(dime)
                 .insertCoin(quarter)
                 .insertCoin(penny)
                 .getCoinReturn();
-        assertEquals(2, coinReturn.size());
-        assertTrue(coinReturn.contains(penny));
+        Map<Currency, Integer> crCurrencies = coinReturn.getCurrencies();
+        assertEquals((int) crCurrencies.get(Currency.UNKNOWN), 2);
     }
 
     /**
@@ -133,10 +123,11 @@ public class MachineTest {
             .insertCoin(dime)
             .insertCoin(nickel);
         Machine returned = filled.returnCoins();
-        List<Coin> coinReturn = returned.getCoinReturn();
-        assertTrue(coinReturn.contains(penny));
-        assertTrue(coinReturn.contains(quarter));
-        assertTrue(coinReturn.contains(dime));
-        assertTrue(coinReturn.contains(nickel));
+        Bank coinReturn = returned.getCoinReturn();
+        Map<Currency, Integer> currencies = coinReturn.getCurrencies();
+        assertEquals(1, (int) currencies.get(Currency.UNKNOWN));
+        assertEquals(1, (int) currencies.get(Currency.QUARTER));
+        assertEquals(1, (int) currencies.get(Currency.DIME));
+        assertEquals(1, (int) currencies.get(Currency.NICKEL));
     }
 }

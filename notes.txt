@@ -73,3 +73,20 @@ to its enum.
 
 This is a problem.  The display has to change state when "checked."  Check has
 to be a separate operation.
+
+--
+
+Eventually pull the big logic blocks out of Machine into behavior classes.
+Pull out balance calculation code into another class.
+
+Jacoco caught me adding stuff I wasn't using yet, which I then built a bunch of
+complexity around before I had simple tests for the smaller things.  At least
+I'm not afraid of throwing things away.  This has been cleaned up for now.
+
+--
+
+The coin return can just be a Bank too.  Banks now invariably create maps of
+currency to quantity with zeroes filled in for each currency in the Currency
+enum.  It does this in the constructor.
+
+Things are now dramatically cleaner.

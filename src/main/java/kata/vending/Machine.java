@@ -1,26 +1,20 @@
 package kata.vending;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Represents a vending machine and its behavior.
  * Immutable.
  */
 public final class Machine {
     /**
-     * List of coins representing the coin return slot of the machine.
+     * Bank representing the coin return slot of the machine.
      */
-    private final List<Coin> coinReturn;
-    public List<Coin> getCoinReturn() {
-        return Collections.unmodifiableList(coinReturn);
+    private final Bank coinReturn;
+    public Bank getCoinReturn() {
+        return coinReturn;
     }
 
     /**
-     * The current bank of currencies of the vending machine customer.
+     * The current bank of currencies inserted by the vending machine customer.
      */
     private final Bank customerBank;
 
@@ -36,19 +30,13 @@ public final class Machine {
      * Builder for the immutable Machine class.
      */
     public static class Builder {
-        /**
-         * Builder coinReturn.
-         */
-        private List<Coin> coinReturn;
+        /** Builder coinReturn. */
+        private Bank coinReturn;
 
-        /**
-         * Builder customerBank.
-         */
+        /** Builder customerBank. */
         private Bank customerBank;
 
-        /**
-         * Builder display.
-         */
+        /** Builder display. */
         private String display;
 
         /**
@@ -56,7 +44,7 @@ public final class Machine {
          * @param newCoinReturn coinReturn
          * @return this Builder
          */
-        public final Builder coinReturn(final List<Coin> newCoinReturn) {
+        public final Builder coinReturn(final Bank newCoinReturn) {
             this.coinReturn = newCoinReturn;
             return this;
         }
@@ -82,6 +70,23 @@ public final class Machine {
         }
 
         /**
+         * Default constructor.
+         */
+        public Builder() {
+
+        }
+
+        /**
+         * Machine copy constructor.
+         * @param machine the machine to copy properties from
+         */
+        public Builder(final Machine machine) {
+            this.coinReturn = machine.coinReturn;
+            this.customerBank = machine.customerBank;
+            this.display = machine.display;
+        }
+
+        /**
          * Build a new instance of Machine.
          * @return the new Machine instance
          */
@@ -97,16 +102,17 @@ public final class Machine {
      */
     private Machine(final Builder builder) {
         if (builder.coinReturn == null) {
-            this.coinReturn = Collections.emptyList();
+            this.coinReturn = new Bank();
         } else {
             this.coinReturn = builder.coinReturn;
         }
+
         if (builder.customerBank == null) {
-            this.customerBank =
-                new Bank(Collections.<Currency, Integer>emptyMap());
+            this.customerBank = new Bank();
         } else {
             this.customerBank = builder.customerBank;
         }
+
         if (builder.display == null) {
             this.display = "INSERT COIN";
         } else {
@@ -120,30 +126,19 @@ public final class Machine {
      * @return a vending machine with the coin inserted
      */
     public Machine insertCoin(final Coin coin) {
-        final List<Coin> coinReturn = new ArrayList<>();
-        coinReturn.addAll(this.coinReturn);
-        final Map<Currency, Integer> customerCash = new HashMap<>();
-        customerCash.putAll(customerBank.getCurrencies());
-
+        Builder builder = new Builder(this);
         final Currency currency = Currency.toCurrency(coin);
         if (currency == Currency.UNKNOWN) {
-            coinReturn.add(coin);
+            builder.coinReturn(new Bank()
+                    .deposit(this.coinReturn)
+                    .deposit(currency));
         } else {
-            if (customerCash.containsKey(currency)) {
-                customerCash.put(currency, customerCash.get(currency) + 1);
-            } else {
-                customerCash.put(currency, 1);
-            }
+            Bank updated = customerBank.deposit(currency);
+            builder.customerBank(updated);
+            builder.display(Bank.balanceAsString(updated.calculateBalance()));
         }
 
-        final List<Coin> updatedCoinReturn =
-                Collections.unmodifiableList(coinReturn);
-        final Bank updatedCustomerBank = new Bank(customerCash);
-        return new Builder()
-                .coinReturn(updatedCoinReturn)
-                .customerBank(updatedCustomerBank)
-                .display(updatedCustomerBank.balanceAsString())
-                .build();
+        return builder.build();
     }
 
     /**
@@ -151,23 +146,13 @@ public final class Machine {
      * @return machine with appropriate coin return and customer bank
      */
     public Machine returnCoins() {
-        final List<Coin> currentCoinReturn = new ArrayList<>();
-        currentCoinReturn.addAll(this.coinReturn);
-
-        final Map<Currency, Integer> cash = customerBank.getCurrencies();
-        for (Map.Entry<Currency, Integer> currencyQuantity : cash.entrySet()) {
-            for (int i = 0; i < currencyQuantity.getValue(); i++) {
-                currentCoinReturn.add(currencyQuantity.getKey().getCoin());
-            }
-        }
-
-        final List<Coin> updatedCoinReturn =
-            Collections.unmodifiableList(currentCoinReturn);
-        final Bank updatedCustomerBank =
-            new Bank(Collections.<Currency, Integer>emptyMap());
-        return new Builder()
-            .coinReturn(updatedCoinReturn)
-            .display(updatedCustomerBank.balanceAsString())
+        Bank newCustomerBank = new Bank();
+        return new Builder(this)
+            .coinReturn(coinReturn.deposit(customerBank))
+            .customerBank(newCustomerBank)
+            .display(Bank.balanceAsString(
+                    newCustomerBank.calculateBalance()
+            ))
             .build();
     }
 }
