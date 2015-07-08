@@ -185,6 +185,21 @@ public final class Machine {
     }
 
     /**
+     * Calculate whether the machine can make change for each of the products.
+     * @return true if the machine can make change, false if it can't
+     */
+    private boolean canMakeChange() {
+        for (Product product : Product.values()) {
+            final Long price = product.getPrice();
+            final Bank changeAttempt = machineBank.makeChange(price);
+            if (!changeAttempt.calculateBalance().equals(price)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Checks the display of the machine.  This is an action that recalculates
      * the display state.  This does not return the display.  This returns a
      * machine with the display having been checked.
@@ -195,15 +210,10 @@ public final class Machine {
         final Long balance = customerBank.calculateBalance();
         if (balance == 0) {
             builder.display("INSERT COIN");
-        }
-        for (Product product : Product.values()) {
-            final Long price = product.getPrice();
-            final Bank changeAttempt = machineBank.makeChange(price);
-            if (!changeAttempt.calculateBalance().equals(price)) {
+            if (!canMakeChange()) {
                 builder.display("EXACT CHANGE ONLY");
             }
-        }
-        if (balance > 0) {
+        } else {
             builder.display(balanceAsString(balance));
         }
         return builder.build();
