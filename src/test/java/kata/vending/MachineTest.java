@@ -3,8 +3,6 @@ package kata.vending;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -68,8 +66,9 @@ public class MachineTest {
                 .insertCoin(quarter)
                 .insertCoin(penny)
                 .getCoinReturn();
-        Map<Currency, Integer> crCurrencies = coinReturn.getCurrencies();
-        assertEquals((int) crCurrencies.get(Currency.UNKNOWN), 2);
+        assertEquals(2, (int) coinReturn
+            .getInventory()
+            .quantity(Currency.UNKNOWN));
     }
 
     /**
@@ -142,11 +141,11 @@ public class MachineTest {
             .insertCoin(nickel);
         Machine returned = filled.returnCoins();
         Bank coinReturn = returned.getCoinReturn();
-        Map<Currency, Integer> currencies = coinReturn.getCurrencies();
-        assertEquals(1, (int) currencies.get(Currency.UNKNOWN));
-        assertEquals(1, (int) currencies.get(Currency.QUARTER));
-        assertEquals(1, (int) currencies.get(Currency.DIME));
-        assertEquals(1, (int) currencies.get(Currency.NICKEL));
+        Inventory<Currency> currencies = coinReturn.getInventory();
+        assertEquals(1, (int) currencies.quantity(Currency.UNKNOWN));
+        assertEquals(1, (int) currencies.quantity(Currency.QUARTER));
+        assertEquals(1, (int) currencies.quantity(Currency.DIME));
+        assertEquals(1, (int) currencies.quantity(Currency.NICKEL));
     }
 
     /**
@@ -198,7 +197,8 @@ public class MachineTest {
             .vend(Product.CANDY);
         Bank coinReturn = vended.getCoinReturn();
         assertEquals(Currency.DIME.getCents(), coinReturn.calculateBalance());
-        assertEquals(1, (long) coinReturn.getCurrencies().get(Currency.DIME));
+        assertEquals(1,
+            (int) coinReturn.getInventory().quantity(Currency.DIME));
     }
 
     /**

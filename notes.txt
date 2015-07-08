@@ -108,3 +108,8 @@ Bank needs withdraw tests beyond coverage from other test classes.
 Need more defensive checking of parameters.  Null checks.
 
 checkDisplay is not explicit enough and has a 5 cyclomatic complexity.
+
+--
+
+Bank now wraps a generic enum inventory class that can also be used for
+products.  Product inventory should theoretically be easy to implement now.

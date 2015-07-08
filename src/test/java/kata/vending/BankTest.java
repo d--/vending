@@ -27,8 +27,8 @@ public class BankTest {
     @Test
     public final void whenDepositBlankBankIntoBlankBankBalanceIsZero() {
         assertEquals(0, (long) bank
-                .deposit(new Bank())
-                .calculateBalance());
+            .deposit(new Bank())
+            .calculateBalance());
     }
 
     /**
@@ -133,6 +133,16 @@ public class BankTest {
         assertEquals(50L, (long) nickels
                 .makeChange(50L)
                 .calculateBalance());
-        assertEquals(5, (int) nickels.getCurrencies().get(Currency.NICKEL));
+        assertEquals(5, (int) nickels
+            .getInventory()
+            .quantity(Currency.NICKEL));
+    }
+
+    /**
+     * Test that a withdrawal of a null bank gives the same bank.
+     */
+    @Test
+    public final void whenWithdrawNullBankGetSameBank() {
+        assertEquals(bank, bank.withdraw(null));
     }
 }
