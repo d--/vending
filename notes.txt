@@ -90,3 +90,21 @@ currency to quantity with zeroes filled in for each currency in the Currency
 enum.  It does this in the constructor.
 
 Things are now dramatically cleaner.
+
+--
+
+Bank "change" making and withdrawal (subset functionality) is a clear a source
+of complexity.  This is because my data structures are probably a little janky
+for what I'm trying to do.  I don't want to pull in Guava just for this little
+project though, so I'm going to keep moving and refactor later.
+
+--
+
+There's a lot of implicit math and value-knowing in the Machine tests.  Try to
+reduce this.
+
+Bank needs withdraw tests beyond coverage from other test classes.
+
+Need more defensive checking of parameters.  Null checks.
+
+checkDisplay is not explicit enough and has a 5 cyclomatic complexity.

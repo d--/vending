@@ -158,7 +158,9 @@
         -->
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <!--
+         I KNOW WHEN I'M DOING THIS
+         <module name="MagicNumber"/> -->
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>

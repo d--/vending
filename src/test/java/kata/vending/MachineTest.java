@@ -1,5 +1,6 @@
 package kata.vending;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
@@ -13,7 +14,7 @@ public class MachineTest {
     /**
      * A machine to set up for tests.
      */
-    private final Machine machine = new Machine.Builder().build();
+    private Machine machine;
 
     /**
      * Penny coin; not a currency.
@@ -34,6 +35,23 @@ public class MachineTest {
      * Quarter coin.
      */
     private Coin quarter = Currency.QUARTER.getCoin();
+
+    /**
+     * Set up a machine with a filled bank and inventory.
+     */
+    @Before
+    public final void setUpMachine() {
+        Bank machineBank = new Bank();
+        for (Currency currency : Currency.values()) {
+            for (int i = 0; i < 10; i++) {
+                machineBank = machineBank.deposit(currency);
+            }
+        }
+        machine = new Machine
+            .Builder()
+            .machineBank(machineBank)
+            .build();
+    }
 
     /**
      * Test that when invalid coins (coins with no classification) are
@@ -59,7 +77,7 @@ public class MachineTest {
      * displays INSERT COIN.
      */
     @Test
-    public final void whenMachineBalanceIsZeroDisplayInsertCoin() {
+    public final void whenCustomerBankIsZeroDisplayInsertCoin() {
         assertEquals("INSERT COIN", machine.getDisplay());
     }
 
@@ -129,5 +147,90 @@ public class MachineTest {
         assertEquals(1, (int) currencies.get(Currency.QUARTER));
         assertEquals(1, (int) currencies.get(Currency.DIME));
         assertEquals(1, (int) currencies.get(Currency.NICKEL));
+    }
+
+    /**
+     * Test that when enough money is inserted, a vend displays the correct
+     * messages.
+     */
+    @Test
+    public final void whenEnoughMoneyVendDisplayIsCorrect() {
+        Machine vended = machine
+            .insertCoin(quarter)
+            .insertCoin(quarter)
+            .vend(Product.CHIPS);
+        String vendingDisplay = vended.getDisplay();
+        assertEquals("THANK YOU", vendingDisplay);
+        String displayAfter = vended.checkDisplay().getDisplay();
+        assertEquals("INSERT COIN", displayAfter);
+    }
+
+    /**
+     * Test that when not enough money is inserted, a vend displays the price,
+     * then displays the amount inserted.
+     */
+    @Test
+    public final void whenNotEnoughMoneyVendDisplayIsCorrect() {
+        Machine nope = machine
+            .insertCoin(nickel)
+            .vend(Product.CANDY);
+        String vendingDisplay = nope.getDisplay();
+        assertEquals(vendingDisplay, "PRICE $0.65");
+        String displayAfter = nope.checkDisplay().getDisplay();
+        assertEquals("$0.05", displayAfter);
+    }
+
+
+    /**
+     * Test that when too much money is inserted, a vend makes correct change.
+     */
+    @Test
+    public final void whenTooMuchMoneyVendMakesCorrectChange() {
+        Bank bankWithDime = new Bank().deposit(Currency.DIME);
+        Machine machineWithDime = new Machine
+            .Builder()
+            .machineBank(bankWithDime)
+            .build();
+        Machine vended = machineWithDime
+            .insertCoin(quarter)
+            .insertCoin(quarter)
+            .insertCoin(quarter)
+            .vend(Product.CANDY);
+        Bank coinReturn = vended.getCoinReturn();
+        assertEquals(Currency.DIME.getCents(), coinReturn.calculateBalance());
+        assertEquals(1, (long) coinReturn.getCurrencies().get(Currency.DIME));
+    }
+
+    /**
+     * Test that when the display is checked, an inability to make correct
+     * change is met with "EXACT CHANGE ONLY".
+     */
+    @Test
+    public final void whenNotEnoughChangeDisplayExactChangeOnly() {
+        Machine machineWithBank = new Machine.Builder().build();
+        assertEquals("EXACT CHANGE ONLY", machineWithBank
+            .checkDisplay()
+            .getDisplay());
+    }
+
+    /**
+     * Test that banks are in the appropriate state when the customer ignores
+     * EXACT CHANGE ONLY.
+     */
+    @Test
+    public final void whenNotEnoughChangeButNeedChangeAnyway() {
+        Machine blank = new Machine.Builder().build();
+        assertEquals("EXACT CHANGE ONLY", blank.checkDisplay().getDisplay());
+        Machine vended = blank
+                .insertCoin(quarter)
+                .insertCoin(quarter)
+                .insertCoin(quarter)
+                .vend(Product.CANDY);
+        Bank coinReturn = vended.getCoinReturn();
+        assertEquals(0, (long) coinReturn.calculateBalance());
+        assertEquals(0, (long) vended.getCustomerBank().calculateBalance());
+        assertEquals(75L, (long) vended.getMachineBank().calculateBalance());
+        assertEquals("THANK YOU", vended.getDisplay());
+        assertEquals("EXACT CHANGE ONLY", vended.checkDisplay().getDisplay());
     }
 }

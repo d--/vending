@@ -17,6 +17,17 @@ public final class Machine {
      * The current bank of currencies inserted by the vending machine customer.
      */
     private final Bank customerBank;
+    public Bank getCustomerBank() {
+        return customerBank;
+    }
+
+    /**
+     * The current bank of currencies stocked in the machine.
+     */
+    private final Bank machineBank;
+    public Bank getMachineBank() {
+        return machineBank;
+    }
 
     /**
      * The current display of the vending machine.
@@ -35,6 +46,9 @@ public final class Machine {
 
         /** Builder customerBank. */
         private Bank customerBank;
+
+        /** Builder machineBank. */
+        private Bank machineBank;
 
         /** Builder display. */
         private String display;
@@ -56,6 +70,16 @@ public final class Machine {
          */
         public final Builder customerBank(final Bank newCustomerBank) {
             this.customerBank = newCustomerBank;
+            return this;
+        }
+
+        /**
+         * Builder setter for machineBank.
+         * @param newMachineBank machineBank
+         * @return this Builder
+         */
+        public final Builder machineBank(final Bank newMachineBank) {
+            this.machineBank = newMachineBank;
             return this;
         }
 
@@ -83,6 +107,7 @@ public final class Machine {
         public Builder(final Machine machine) {
             this.coinReturn = machine.coinReturn;
             this.customerBank = machine.customerBank;
+            this.machineBank = machine.machineBank;
             this.display = machine.display;
         }
 
@@ -101,18 +126,9 @@ public final class Machine {
      * @param builder the machine builder
      */
     private Machine(final Builder builder) {
-        if (builder.coinReturn == null) {
-            this.coinReturn = new Bank();
-        } else {
-            this.coinReturn = builder.coinReturn;
-        }
-
-        if (builder.customerBank == null) {
-            this.customerBank = new Bank();
-        } else {
-            this.customerBank = builder.customerBank;
-        }
-
+        this.coinReturn = new Bank().deposit(builder.coinReturn);
+        this.customerBank = new Bank().deposit(builder.customerBank);
+        this.machineBank = new Bank().deposit(builder.machineBank);
         if (builder.display == null) {
             this.display = "INSERT COIN";
         } else {
@@ -121,23 +137,37 @@ public final class Machine {
     }
 
     /**
+     * Return the passed in balance as a formatted currency string.
+     * @param balance the balance to turn into a string
+     * @return the current balance string with a dollar sign
+     */
+    private String balanceAsString(final Long balance) {
+        final int oneDollar = 100;
+        final int tenCents = 10;
+        final Long dollars = balance / oneDollar;
+        final Long cents = balance % oneDollar;
+        String lower = cents.toString();
+        if (cents < tenCents) {
+            lower = '0' + lower;
+        }
+        return "$" + dollars.toString() + '.' + lower;
+    }
+
+    /**
      * Insert a coin into the vending machine.
      * @param coin the coin to insert
      * @return a vending machine with the coin inserted
      */
     public Machine insertCoin(final Coin coin) {
-        Builder builder = new Builder(this);
+        final Builder builder = new Builder(this);
         final Currency currency = Currency.toCurrency(coin);
         if (currency == Currency.UNKNOWN) {
-            builder.coinReturn(new Bank()
-                    .deposit(this.coinReturn)
-                    .deposit(currency));
+            builder.coinReturn(coinReturn.deposit(currency));
         } else {
-            Bank updated = customerBank.deposit(currency);
+            final Bank updated = customerBank.deposit(currency);
             builder.customerBank(updated);
-            builder.display(Bank.balanceAsString(updated.calculateBalance()));
+            builder.display(balanceAsString(updated.calculateBalance()));
         }
-
         return builder.build();
     }
 
@@ -146,13 +176,62 @@ public final class Machine {
      * @return machine with appropriate coin return and customer bank
      */
     public Machine returnCoins() {
-        Bank newCustomerBank = new Bank();
+        final Bank newCustomerBank = new Bank();
         return new Builder(this)
             .coinReturn(coinReturn.deposit(customerBank))
             .customerBank(newCustomerBank)
-            .display(Bank.balanceAsString(
-                    newCustomerBank.calculateBalance()
-            ))
+            .display(balanceAsString(newCustomerBank.calculateBalance()))
             .build();
+    }
+
+    /**
+     * Checks the display of the machine.  This is an action that recalculates
+     * the display state.  This does not return the display.  This returns a
+     * machine with the display having been checked.
+     * @return the machine with the display having been checked
+     */
+    public Machine checkDisplay() {
+        final Builder builder = new Builder(this);
+        final Long balance = customerBank.calculateBalance();
+        if (balance == 0) {
+            builder.display("INSERT COIN");
+        }
+        for (Product product : Product.values()) {
+            final Long price = product.getPrice();
+            final Bank changeAttempt = machineBank.makeChange(price);
+            if (!changeAttempt.calculateBalance().equals(price)) {
+                builder.display("EXACT CHANGE ONLY");
+            }
+        }
+        if (balance > 0) {
+            builder.display(balanceAsString(balance));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Vends a product from the machine if customer funds are sufficient.
+     *
+     * @param product the product to dispense
+     * @return a new machine with properties appropriately adjusted
+     */
+    public Machine vend(final Product product) {
+        final Builder builder = new Builder(this);
+        final Long balance = customerBank.calculateBalance();
+        final Long price = product.getPrice();
+        if (balance >= price) {
+            final Long change = balance - price;
+            final Bank combined = machineBank.deposit(customerBank);
+            final Bank changeBank = combined.makeChange(change);
+            final Bank withdrawn = combined.withdraw(changeBank);
+            builder
+                .machineBank(withdrawn)
+                .customerBank(new Bank())
+                .coinReturn(changeBank)
+                .display("THANK YOU");
+        } else {
+            builder.display("PRICE " + balanceAsString(product.getPrice()));
+        }
+        return builder.build();
     }
 }
