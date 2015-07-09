@@ -8,3 +8,7 @@ To build:
 Jacoco will generate a test coverage report at:
 
     ./build/reports/jacoco/test/html/index.html
+
+To generate IntelliJ IDEA project files:
+
+    $ ./gradlew idea
