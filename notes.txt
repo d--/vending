@@ -113,3 +113,13 @@ checkDisplay is not explicit enough and has a 5 cyclomatic complexity.
 
 Bank now wraps a generic enum inventory class that can also be used for
 products.  Product inventory should theoretically be easy to implement now.
+
+--
+
+We are now functionally complete with 100% test coverage.  Now to do:
+
+* Clean up javadoc
+* Git rid of wrapped primitives
+* Write more thorough tests, check null values for explosions
+* Make machine tests less implicit / mapped to kata doc
+* Use the gradle application plugin and write a looped driver for play

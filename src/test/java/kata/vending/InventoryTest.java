@@ -79,10 +79,35 @@ public class InventoryTest {
     }
 
     /**
-     * Test an inventory subtract.
+     * Test a simple item subtract.
      */
     @Test
     public final void whenSubtractInventoryItemQuantitiesCorrect() {
+        Inventory<Fruit> three = empty
+                .add(Fruit.GRAPE)
+                .add(Fruit.GRAPE)
+                .add(Fruit.GRAPE);
+        assertEquals(2, (int) three
+                .subtract(Fruit.GRAPE)
+                .quantity(Fruit.GRAPE));
+    }
+
+    /**
+     * Test a simple subtract when empty inventory.
+     */
+    @Test
+    public final void whenSubtractEmptyInventoryJustGetZero() {
+        assertEquals(0, (int) empty
+                .subtract(Fruit.GRAPE)
+                .subtract(Fruit.GRAPE)
+                .quantity(Fruit.GRAPE));
+    }
+
+    /**
+     * Test an inventory subtract.
+     */
+    @Test
+    public final void whenSubtractInventoryQuantitiesCorrect() {
         Inventory<Fruit> three = empty
             .add(Fruit.APPLE)
             .add(Fruit.BANANA)
@@ -112,6 +137,7 @@ public class InventoryTest {
     public final void whenAddSubtractNullInventoryIsSame() {
         assertEquals(empty, empty.add((Fruit) null));
         assertEquals(empty, empty.add((Inventory<Fruit>) null));
-        assertEquals(empty, empty.subtract(null));
+        assertEquals(empty, empty.subtract((Fruit) null));
+        assertEquals(empty, empty.subtract((Inventory<Fruit>) null));
     }
 }

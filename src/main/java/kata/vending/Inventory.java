@@ -78,6 +78,25 @@ public final class Inventory<T extends Enum> {
     }
 
     /**
+     * Subtract a single item from this inventory.
+     * @param item the item to subtract
+     * @return an inventory with the item subtracted from this one
+     */
+    public Inventory<T> subtract(final T item) {
+        if (item == null) {
+            return this;
+        }
+        final Map<T, Integer> freshMap = new HashMap<>();
+        freshMap.putAll(items);
+        if (freshMap.get(item) <= 0) {
+            freshMap.put(item, 0);
+        } else {
+            freshMap.put(item, freshMap.get(item) - 1);
+        }
+        return new Inventory<T>(enums, Collections.unmodifiableMap(freshMap));
+    }
+
+    /**
      * Subtract the entirety of an inventory from this inventory.
      * @param inventory the inventory to subtract
      * @return an inventory with the inventory subtracted from this one

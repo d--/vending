@@ -30,6 +30,14 @@ public final class Machine {
     }
 
     /**
+     * The current inventory of products.
+     */
+    private final Inventory<Product> inventory;
+    public Inventory<Product> getInventory() {
+        return inventory;
+    }
+
+    /**
      * The current display of the vending machine.
      */
     private final String display;
@@ -50,46 +58,59 @@ public final class Machine {
         /** Builder machineBank. */
         private Bank machineBank;
 
+        /** Builder inventory. */
+        private Inventory<Product> inventory;
+
         /** Builder display. */
         private String display;
 
         /**
          * Builder setter for coinReturn.
-         * @param newCoinReturn coinReturn
+         * @param coinReturn coinReturn
          * @return this Builder
          */
-        public final Builder coinReturn(final Bank newCoinReturn) {
-            this.coinReturn = newCoinReturn;
+        public final Builder coinReturn(final Bank coinReturn) {
+            this.coinReturn = coinReturn;
             return this;
         }
 
         /**
          * Builder setter for customerBank.
-         * @param newCustomerBank customerBank
+         * @param customerBank customerBank
          * @return this Builder
          */
-        public final Builder customerBank(final Bank newCustomerBank) {
-            this.customerBank = newCustomerBank;
+        public final Builder customerBank(final Bank customerBank) {
+            this.customerBank = customerBank;
             return this;
         }
 
         /**
          * Builder setter for machineBank.
-         * @param newMachineBank machineBank
+         * @param machineBank machineBank
          * @return this Builder
          */
-        public final Builder machineBank(final Bank newMachineBank) {
-            this.machineBank = newMachineBank;
+        public final Builder machineBank(final Bank machineBank) {
+            this.machineBank = machineBank;
+            return this;
+        }
+
+        /**
+         * Builder setter for inventory.
+         * @param inventory inventory
+         * @return this Builder
+         */
+        public final Builder inventory(final Inventory<Product> inventory) {
+            this.inventory = inventory;
             return this;
         }
 
         /**
          * Builder setter for display.
-         * @param newDisplay display
+         * @param display display
          * @return this Builder
          */
-        public final Builder display(final String newDisplay) {
-            this.display = newDisplay;
+        public final Builder display(final String display) {
+            this.display = display;
             return this;
         }
 
@@ -108,6 +129,7 @@ public final class Machine {
             this.coinReturn = machine.coinReturn;
             this.customerBank = machine.customerBank;
             this.machineBank = machine.machineBank;
+            this.inventory = machine.inventory;
             this.display = machine.display;
         }
 
@@ -129,6 +151,8 @@ public final class Machine {
         this.coinReturn = new Bank().deposit(builder.coinReturn);
         this.customerBank = new Bank().deposit(builder.customerBank);
         this.machineBank = new Bank().deposit(builder.machineBank);
+        this.inventory = new Inventory<>(Product.values())
+                .add(builder.inventory);
         if (builder.display == null) {
             this.display = "INSERT COIN";
         } else {
@@ -227,6 +251,10 @@ public final class Machine {
      */
     public Machine vend(final Product product) {
         final Builder builder = new Builder(this);
+        if (inventory.quantity(product) <= 0) {
+            builder.display("SOLD OUT");
+            return builder.build();
+        }
         final Long balance = customerBank.calculateBalance();
         final Long price = product.getPrice();
         if (balance >= price) {
@@ -238,6 +266,7 @@ public final class Machine {
                 .machineBank(withdrawn)
                 .customerBank(new Bank())
                 .coinReturn(changeBank)
+                .inventory(inventory.subtract(product))
                 .display("THANK YOU");
         } else {
             builder.display("PRICE " + balanceAsString(product.getPrice()));

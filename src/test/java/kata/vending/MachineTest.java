@@ -15,6 +15,11 @@ public class MachineTest {
     private Machine machine;
 
     /**
+     * An inventory to fill for tests.
+     */
+    private Inventory<Product> inventory;
+
+    /**
      * Penny coin; not a currency.
      */
     private Coin penny = Currency.UNKNOWN.getCoin();
@@ -38,16 +43,23 @@ public class MachineTest {
      * Set up a machine with a filled bank and inventory.
      */
     @Before
-    public final void setUpMachine() {
+    public final void setUpMachineAndInventory() {
         Bank machineBank = new Bank();
+        inventory = new Inventory<>(Product.values());
         for (Currency currency : Currency.values()) {
             for (int i = 0; i < 10; i++) {
                 machineBank = machineBank.deposit(currency);
             }
         }
+        for (Product product : Product.values()) {
+            for (int i = 0; i < 10; i++) {
+                inventory = inventory.add(product);
+            }
+        }
         machine = new Machine
             .Builder()
             .machineBank(machineBank)
+            .inventory(inventory)
             .build();
     }
 
@@ -174,7 +186,7 @@ public class MachineTest {
             .insertCoin(nickel)
             .vend(Product.CANDY);
         String vendingDisplay = nope.getDisplay();
-        assertEquals(vendingDisplay, "PRICE $0.65");
+        assertEquals("PRICE $0.65", vendingDisplay);
         String displayAfter = nope.checkDisplay().getDisplay();
         assertEquals("$0.05", displayAfter);
     }
@@ -189,6 +201,7 @@ public class MachineTest {
         Machine machineWithDime = new Machine
             .Builder()
             .machineBank(bankWithDime)
+            .inventory(inventory)
             .build();
         Machine vended = machineWithDime
             .insertCoin(quarter)
@@ -219,7 +232,7 @@ public class MachineTest {
      */
     @Test
     public final void whenNotEnoughChangeButNeedChangeAnyway() {
-        Machine blank = new Machine.Builder().build();
+        Machine blank = new Machine.Builder().inventory(inventory).build();
         assertEquals("EXACT CHANGE ONLY", blank.checkDisplay().getDisplay());
         Machine vended = blank
                 .insertCoin(quarter)
@@ -232,5 +245,37 @@ public class MachineTest {
         assertEquals(75L, (long) vended.getMachineBank().calculateBalance());
         assertEquals("THANK YOU", vended.getDisplay());
         assertEquals("EXACT CHANGE ONLY", vended.checkDisplay().getDisplay());
+    }
+
+    /**
+     * Test that when a product is sold out, the display is updated correctly
+     * and the customer is not charged, and the money remains in the machine to
+     * be used for another purchase.
+     */
+    @Test
+    public final void whenProductIsSoldOutDisplaySoldOutOnly() {
+        Machine prepped = new Machine
+                .Builder(machine)
+                .inventory(null)
+                .build()
+                .insertCoin(nickel)
+                .vend(Product.CANDY);
+
+        assertEquals("SOLD OUT", prepped.getDisplay());
+        assertEquals(0, (long) prepped.getCoinReturn().calculateBalance());
+        assertEquals(5L, (long) prepped.getCustomerBank().calculateBalance());
+    }
+
+    /**
+     * Test that a proper vend creates the proper inventory.
+     */
+    @Test
+    public final void whenVendProductInventoryCorrect() {
+        assertEquals(inventory.quantity(Product.CHIPS) - 1, (int) machine
+                .insertCoin(quarter)
+                .insertCoin(quarter)
+                .vend(Product.CHIPS)
+                .getInventory()
+                .quantity(Product.CHIPS));
     }
 }
