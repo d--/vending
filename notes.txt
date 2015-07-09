@@ -139,3 +139,10 @@ enum.
 If product prices cannot be made up of the available currencies, things break.
 ...but hopefully nobody is going to build a vending machine that has prices
 that cannot be evenly satisfied by the currencies it can accept.
+
+--
+
+I suppose I should have brought in a mocking framework alongside Junit, but it
+felt like overkill.  Besides, the machine is the only component with dependency
+heavy tests and "heavy" isn't even really true.  It is the one integral piece,
+after all.
