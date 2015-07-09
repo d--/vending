@@ -19,8 +19,8 @@ public final class Bank {
      * Calculate the balance (in cents) of the currently held currencies.
      * @return the current balance (in cents)
      */
-    public Long calculateBalance() {
-        Long balance = 0L;
+    public long calculateBalance() {
+        long balance = 0L;
         for (Currency currency : Currency.values()) {
             balance += currency.getCents() * inventory.quantity(currency);
         }
@@ -33,13 +33,13 @@ public final class Bank {
      * @param amount the amount of change needed
      * @return a bank of change made from as much currency that could be taken
      */
-    public Bank makeChange(final Long amount) {
-        Long change = amount;
+    public Bank makeChange(final long amount) {
+        long change = amount;
         Bank changeBank = new Bank();
         final SortedSet<Currency> descending = Currency.descending();
         for (Currency largest : descending) {
-            Integer quantity = inventory.quantity(largest);
-            final Long cents = largest.getCents();
+            int quantity = inventory.quantity(largest);
+            final long cents = largest.getCents();
             while (quantity > 0 && change >= cents) {
                 change = change - cents;
                 quantity = quantity - 1;

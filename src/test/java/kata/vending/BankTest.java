@@ -18,7 +18,7 @@ public class BankTest {
      */
     @Test
     public final void whenCreateNewBankBalanceIsZero() {
-        assertEquals(0, (long) bank.calculateBalance());
+        assertEquals(0, bank.calculateBalance());
     }
 
     /**
@@ -26,7 +26,7 @@ public class BankTest {
      */
     @Test
     public final void whenDepositBlankBankIntoBlankBankBalanceIsZero() {
-        assertEquals(0, (long) bank
+        assertEquals(0, bank
             .deposit(new Bank())
             .calculateBalance());
     }
@@ -36,7 +36,7 @@ public class BankTest {
      */
     @Test
     public final void whenDepositNullBankBalanceIsZero() {
-        assertEquals(0, (long) bank
+        assertEquals(0, bank
                 .deposit((Bank) null)
                 .calculateBalance());
     }
@@ -46,7 +46,7 @@ public class BankTest {
      */
     @Test
     public final void whenDepositInvalidCurrencyBalanceIsZero() {
-        assertEquals(0, (long) bank
+        assertEquals(0, bank
                 .deposit(Currency.UNKNOWN)
                 .calculateBalance());
     }
@@ -56,7 +56,7 @@ public class BankTest {
      */
     @Test
     public final void whenDepositNullCurrencyBalanceIsZero() {
-        assertEquals(0, (long) bank
+        assertEquals(0, bank
                 .deposit((Currency) null)
                 .calculateBalance());
     }
@@ -66,7 +66,7 @@ public class BankTest {
      */
     @Test
     public final void whenDepositValidCurrencyBalanceIsAppropriate() {
-        final Long value = Currency.QUARTER.getCents()
+        final long value = Currency.QUARTER.getCents()
                 + Currency.NICKEL.getCents();
         assertEquals(value, bank
                 .deposit(Currency.QUARTER)
@@ -79,7 +79,7 @@ public class BankTest {
      */
     @Test
     public final void whenDepositFilledBankBalanceIsAppropriate() {
-        final Long value = Currency.QUARTER.getCents()
+        final long value = Currency.QUARTER.getCents()
                 + Currency.DIME.getCents();
         final Bank one = bank.deposit(Currency.QUARTER);
         final Bank two = bank.deposit(Currency.DIME);
@@ -91,7 +91,7 @@ public class BankTest {
      */
     @Test
     public final void whenMakeChangeOfZeroGetEmptyBank() {
-        assertEquals(0, (long) bank.makeChange(0L).calculateBalance());
+        assertEquals(0, bank.makeChange(0L).calculateBalance());
     }
 
     /**
@@ -99,7 +99,7 @@ public class BankTest {
      */
     @Test
     public final void whenFailureToMakeChangeDoBestFit() {
-        assertEquals(50L, (long) bank
+        assertEquals(50L, bank
                 .deposit(Currency.QUARTER)
                 .deposit(Currency.QUARTER)
                 .deposit(Currency.DIME)
@@ -112,7 +112,7 @@ public class BankTest {
      */
     @Test
     public final void whenFailureToMakeAnyChangeDoNothing() {
-        assertEquals(0L, (long) bank
+        assertEquals(0L, bank
                 .deposit(Currency.QUARTER)
                 .makeChange(10L)
                 .calculateBalance());
@@ -130,7 +130,7 @@ public class BankTest {
                 .deposit(Currency.NICKEL)
                 .deposit(Currency.NICKEL)
                 .deposit(Currency.NICKEL);
-        assertEquals(50L, (long) nickels
+        assertEquals(50L, nickels
                 .makeChange(50L)
                 .calculateBalance());
         assertEquals(5, (int) nickels

@@ -165,16 +165,16 @@ public final class Machine {
      * @param balance the balance to turn into a string
      * @return the current balance string with a dollar sign
      */
-    private String balanceAsString(final Long balance) {
+    private String balanceAsString(final long balance) {
         final int oneDollar = 100;
         final int tenCents = 10;
-        final Long dollars = balance / oneDollar;
-        final Long cents = balance % oneDollar;
-        String lower = cents.toString();
+        final long dollars = balance / oneDollar;
+        final long cents = balance % oneDollar;
+        String lower = Long.toString(cents);
         if (cents < tenCents) {
             lower = '0' + lower;
         }
-        return "$" + dollars.toString() + '.' + lower;
+        return "$" + Long.toString(dollars) + '.' + lower;
     }
 
     /**
@@ -214,9 +214,9 @@ public final class Machine {
      */
     private boolean canMakeChange() {
         for (Product product : Product.values()) {
-            final Long price = product.getPrice();
+            final long price = product.getPrice();
             final Bank changeAttempt = machineBank.makeChange(price);
-            if (!changeAttempt.calculateBalance().equals(price)) {
+            if (changeAttempt.calculateBalance() != price) {
                 return false;
             }
         }
@@ -231,7 +231,7 @@ public final class Machine {
      */
     public Machine checkDisplay() {
         final Builder builder = new Builder(this);
-        final Long balance = customerBank.calculateBalance();
+        final long balance = customerBank.calculateBalance();
         if (balance == 0) {
             builder.display("INSERT COIN");
             if (!canMakeChange()) {
@@ -255,10 +255,10 @@ public final class Machine {
             builder.display("SOLD OUT");
             return builder.build();
         }
-        final Long balance = customerBank.calculateBalance();
-        final Long price = product.getPrice();
+        final long balance = customerBank.calculateBalance();
+        final long price = product.getPrice();
         if (balance >= price) {
-            final Long change = balance - price;
+            final long change = balance - price;
             final Bank combined = machineBank.deposit(customerBank);
             final Bank changeBank = combined.makeChange(change);
             final Bank withdrawn = combined.withdraw(changeBank);

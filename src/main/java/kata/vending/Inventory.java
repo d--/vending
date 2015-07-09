@@ -108,8 +108,8 @@ public final class Inventory<T extends Enum> {
         final Map<T, Integer> freshMap = new HashMap<>();
         final Map<T, Integer> toSubtract = inventory.getItems();
         for (T t : enums) {
-            final Integer quantity = items.get(t);
-            final Integer subtract = toSubtract.get(t);
+            final int quantity = items.get(t);
+            final int subtract = toSubtract.get(t);
             if (subtract >= quantity) {
                 freshMap.put(t, 0);
             } else {
@@ -124,7 +124,7 @@ public final class Inventory<T extends Enum> {
      * @param item the item to quantify
      * @return the quantity of the item in the inventory
      */
-    public Integer quantity(final T item) {
+    public int quantity(final T item) {
         if (items.containsKey(item)) {
             return items.get(item);
         } else {

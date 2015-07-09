@@ -40,7 +40,7 @@ public class InventoryTest {
     @Test
     public final void whenBlankEnumNothingBreaks() {
         Inventory<Blank> inventory = new Inventory<>(Blank.values());
-        assertEquals(0, (int) inventory.quantity(null));
+        assertEquals(0, inventory.quantity(null));
     }
 
     /**
@@ -62,8 +62,8 @@ public class InventoryTest {
             .add(Fruit.APPLE)
             .add(Fruit.BANANA)
             .add(Fruit.BANANA);
-        assertEquals(1, (int) fruits.quantity(Fruit.APPLE));
-        assertEquals(2, (int) fruits.quantity(Fruit.BANANA));
+        assertEquals(1, fruits.quantity(Fruit.APPLE));
+        assertEquals(2, fruits.quantity(Fruit.BANANA));
     }
 
     /**
@@ -74,8 +74,8 @@ public class InventoryTest {
         Inventory<Fruit> apples = empty.add(Fruit.APPLE);
         Inventory<Fruit> bananas = empty.add(Fruit.BANANA);
         Inventory<Fruit> merged = apples.add(bananas);
-        assertEquals(1, (int) merged.quantity(Fruit.APPLE));
-        assertEquals(1, (int) merged.quantity(Fruit.BANANA));
+        assertEquals(1, merged.quantity(Fruit.APPLE));
+        assertEquals(1, merged.quantity(Fruit.BANANA));
     }
 
     /**
@@ -87,7 +87,7 @@ public class InventoryTest {
                 .add(Fruit.GRAPE)
                 .add(Fruit.GRAPE)
                 .add(Fruit.GRAPE);
-        assertEquals(2, (int) three
+        assertEquals(2, three
                 .subtract(Fruit.GRAPE)
                 .quantity(Fruit.GRAPE));
     }
@@ -97,7 +97,7 @@ public class InventoryTest {
      */
     @Test
     public final void whenSubtractEmptyInventoryJustGetZero() {
-        assertEquals(0, (int) empty
+        assertEquals(0, empty
                 .subtract(Fruit.GRAPE)
                 .subtract(Fruit.GRAPE)
                 .quantity(Fruit.GRAPE));
@@ -116,9 +116,9 @@ public class InventoryTest {
             .add(Fruit.APPLE)
             .add(Fruit.GRAPE);
         Inventory<Fruit> justBanana = three.subtract(notBanana);
-        assertEquals(0, (int) justBanana.quantity(Fruit.APPLE));
-        assertEquals(0, (int) justBanana.quantity(Fruit.GRAPE));
-        assertEquals(1, (int) justBanana.quantity(Fruit.BANANA));
+        assertEquals(0, justBanana.quantity(Fruit.APPLE));
+        assertEquals(0, justBanana.quantity(Fruit.GRAPE));
+        assertEquals(1, justBanana.quantity(Fruit.BANANA));
     }
 
     /**
@@ -127,7 +127,7 @@ public class InventoryTest {
     @Test
     public final void whenSubtractLargerFromSmallerJustZero() {
         Inventory<Fruit> larger = empty.add(Fruit.APPLE);
-        assertEquals(0, (int) empty.subtract(larger).quantity(Fruit.APPLE));
+        assertEquals(0, empty.subtract(larger).quantity(Fruit.APPLE));
     }
 
     /**
