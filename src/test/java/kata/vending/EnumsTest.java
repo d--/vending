@@ -28,6 +28,7 @@ public class EnumsTest {
         enums.add(Product.class);
         enums.add(Coin.Size.class);
         enums.add(Coin.Weight.class);
+        enums.add(Message.class);
     }
 
     /**

@@ -100,14 +100,14 @@ project though, so I'm going to keep moving and refactor later.
 
 --
 
-There's a lot of implicit math and value-knowing in the Machine tests.  Try to
-reduce this.
+x There's a lot of implicit math and value-knowing in the Machine tests.  Try
+to reduce this.
 
-Bank needs withdraw tests beyond coverage from other test classes.
+x Bank needs withdraw tests beyond coverage from other test classes.
 
-Need more defensive checking of parameters.  Null checks.
+x Need more defensive checking of parameters.  Null checks.
 
-checkDisplay is not explicit enough and has a 5 cyclomatic complexity.
+x checkDisplay is not explicit enough and has a 5 cyclomatic complexity.
 
 --
 
@@ -120,8 +120,9 @@ We are now functionally complete with 100% test coverage.  Now to do:
 
 x Clean up javadoc
 x Git rid of wrapped primitives
-* Write more thorough tests, check null values for explosions
-* Make machine tests less implicit / mapped to kata doc
+x Write more thorough tests, check null values for explosions
+x Make machine tests less implicit / mapped to kata doc
+    - Currency values should not change.  Product prices can change.
 * Use the gradle application plugin and write a looped driver for play
 
 --
@@ -129,3 +130,12 @@ x Git rid of wrapped primitives
 Enums have enforced order.  I theoretically could use this to my advantage, but
 I'd rather leave the comparator / sorted list and let people define currencies
 as they see fit.
+
+--
+
+Display messages are hardcoded strings.  Probably should make these another
+enum.
+
+If product prices cannot be made up of the available currencies, things break.
+...but hopefully nobody is going to build a vending machine that has prices
+that cannot be evenly satisfied by the currencies it can accept.

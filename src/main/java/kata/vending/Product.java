@@ -23,9 +23,9 @@ public enum Product {
     /**
      * The price of this product.
      */
-    private final Long price;
+    private final long price;
 
-    public Long getPrice() {
+    public long getPrice() {
         return price;
     }
 
@@ -34,7 +34,7 @@ public enum Product {
      *
      * @param price the price of the product
      */
-    Product(final Long price) {
+    Product(final long price) {
         this.price = price;
     }
 }

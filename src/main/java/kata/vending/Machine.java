@@ -177,7 +177,7 @@ public final class Machine {
         this.inventory = new Inventory<>(Product.values())
                 .add(builder.inventory);
         if (builder.display == null) {
-            this.display = "INSERT COIN";
+            this.display = Message.INSERT_COIN.getText();
         } else {
             this.display = builder.display;
         }
@@ -261,9 +261,9 @@ public final class Machine {
         final Builder builder = new Builder(this);
         final long balance = customerBank.calculateBalance();
         if (balance == 0) {
-            builder.display("INSERT COIN");
+            builder.display(Message.INSERT_COIN.getText());
             if (!canMakeChange()) {
-                builder.display("EXACT CHANGE ONLY");
+                builder.display(Message.EXACT_CHANGE.getText());
             }
         } else {
             builder.display(balanceAsString(balance));
@@ -280,7 +280,7 @@ public final class Machine {
     public Machine vend(final Product product) {
         final Builder builder = new Builder(this);
         if (inventory.quantity(product) <= 0) {
-            builder.display("SOLD OUT");
+            builder.display(Message.SOLD_OUT.getText());
             return builder.build();
         }
         final long balance = customerBank.calculateBalance();
@@ -295,9 +295,10 @@ public final class Machine {
                     .customerBank(new Bank())
                     .coinReturn(changeBank)
                     .inventory(inventory.subtract(product))
-                    .display("THANK YOU");
+                    .display(Message.THANK_YOU.getText());
         } else {
-            builder.display("PRICE " + balanceAsString(product.getPrice()));
+            builder.display(Message.PRICE.getText()
+                    + " " + balanceAsString(product.getPrice()));
         }
         return builder.build();
     }

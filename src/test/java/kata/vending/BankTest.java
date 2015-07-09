@@ -156,4 +156,38 @@ public class BankTest {
     public final void whenWithdrawNullBankGetSameBank() {
         assertEquals(bank, bank.withdraw(null));
     }
+
+    /**
+     * Test that when you withdraw a larger bank from a smaller bank, you get
+     * a blank bank.
+     */
+    @Test
+    public final void whenWithdrawLargerFromSmallerJustZero() {
+        Bank larger = new Bank().deposit(Currency.QUARTER);
+        assertEquals(0, new Bank().withdraw(larger).calculateBalance());
+    }
+
+    /**
+     * Test a basic withdraw.
+     */
+    @Test
+    public final void whenWithdrawBalancesCorrect() {
+        Bank filled = bank
+                .deposit(Currency.QUARTER)
+                .deposit(Currency.NICKEL)
+                .deposit(Currency.DIME);
+        Bank smaller = bank
+                .deposit(Currency.QUARTER)
+                .deposit(Currency.NICKEL);
+        Bank after = filled.withdraw(smaller);
+        assertEquals(10L, after.calculateBalance());
+    }
+
+    /**
+     * Test withdrawing the same bank.
+     */
+    @Test
+    public final void whenWithdrawSelfJustZero() {
+        assertEquals(0, bank.withdraw(bank).calculateBalance());
+    }
 }

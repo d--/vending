@@ -137,6 +137,17 @@ public class InventoryTest {
     }
 
     /**
+     * Test subtracting itself.
+     */
+    @Test
+    public final void whenSubtractSelfJustZero() {
+        Inventory<Fruit> after = empty.subtract(empty);
+        assertEquals(0, after.quantity(Fruit.APPLE));
+        assertEquals(0, after.quantity(Fruit.BANANA));
+        assertEquals(0, after.quantity(Fruit.GRAPE));
+    }
+
+    /**
      * Test that null operations return the same inventory.
      */
     @Test
