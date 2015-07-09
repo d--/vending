@@ -119,6 +119,17 @@ public class BankTest {
     }
 
     /**
+     * Test that attempting to make negative change returns a 0 value Bank.
+     */
+    @Test
+    public final void whenMakeNegativeChangeGetNoChange() {
+        assertEquals(0L, bank
+                .deposit(Currency.QUARTER)
+                .makeChange(-50)
+                .calculateBalance());
+    }
+
+    /**
      * Test that change is made correctly even with multiple small currencies.
      */
     @Test

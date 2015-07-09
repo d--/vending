@@ -14,7 +14,7 @@ public class CurrencyTest {
     @Test
     public final void whenConvertValidCoinCoinBecomesCurrency() {
         Coin valid = Currency.QUARTER.getCoin();
-        assertEquals(Currency.toCurrency(valid), Currency.QUARTER);
+        assertEquals(Currency.QUARTER, Currency.toCurrency(valid));
     }
 
     /**
@@ -23,6 +23,14 @@ public class CurrencyTest {
     @Test
     public final void whenConvertInvalidCoinCoinBecomesUnknownCurrency() {
         Coin invalid = new Coin(null, null);
-        assertEquals(Currency.toCurrency(invalid), Currency.UNKNOWN);
+        assertEquals(Currency.UNKNOWN, Currency.toCurrency(invalid));
+    }
+
+    /**
+     * Test that calling toCurrency on a null value returns unknown.
+     */
+    @Test
+    public final void whenNullToCurrencyGetUnknown() {
+        assertEquals(Currency.UNKNOWN, Currency.toCurrency(null));
     }
 }

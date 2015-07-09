@@ -146,4 +146,12 @@ public class InventoryTest {
         assertEquals(empty, empty.subtract((Fruit) null));
         assertEquals(empty, empty.subtract((Inventory<Fruit>) null));
     }
+
+    /**
+     * Test that the quantity of null is zero.
+     */
+    @Test
+    public final void whenQuantifyNullGetZero() {
+        assertEquals(0, empty.quantity(null));
+    }
 }

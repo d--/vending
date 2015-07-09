@@ -146,18 +146,30 @@ public class MachineTest {
      */
     @Test
     public final void whenInsertCoinsCoinReturnReturnsCoins() {
-        Machine filled = machine
+        Inventory<Currency> currencies = machine
                 .insertCoin(penny)
                 .insertCoin(quarter)
                 .insertCoin(dime)
-                .insertCoin(nickel);
-        Machine returned = filled.returnCoins();
-        Bank coinReturn = returned.getCoinReturn();
-        Inventory<Currency> currencies = coinReturn.getInventory();
+                .insertCoin(nickel)
+                .returnCoins()
+                .getCoinReturn()
+                .getInventory();
         assertEquals(1, currencies.quantity(Currency.UNKNOWN));
         assertEquals(1, currencies.quantity(Currency.QUARTER));
         assertEquals(1, currencies.quantity(Currency.DIME));
         assertEquals(1, currencies.quantity(Currency.NICKEL));
+    }
+
+    /**
+     * Test that "null" is treated as an unknown currency when inserted.
+     */
+    @Test
+    public final void whenInsertNullCoinCoinReturnHasUnknown() {
+        assertEquals(1, machine
+                .insertCoin(null)
+                .getCoinReturn()
+                .getInventory()
+                .quantity(Currency.UNKNOWN));
     }
 
     /**
@@ -197,21 +209,18 @@ public class MachineTest {
      */
     @Test
     public final void whenTooMuchMoneyVendMakesCorrectChange() {
-        Bank bankWithDime = new Bank().deposit(Currency.DIME);
-        Machine machineWithDime = new Machine
+        Bank coinReturn = new Machine
                 .Builder()
-                .machineBank(bankWithDime)
+                .machineBank(new Bank().deposit(Currency.DIME))
                 .inventory(inventory)
-                .build();
-        Machine vended = machineWithDime
+                .build()
                 .insertCoin(quarter)
                 .insertCoin(quarter)
                 .insertCoin(quarter)
-                .vend(Product.CANDY);
-        Bank coinReturn = vended.getCoinReturn();
+                .vend(Product.CANDY)
+                .getCoinReturn();
         assertEquals(Currency.DIME.getCents(), coinReturn.calculateBalance());
-        assertEquals(1,
-                coinReturn.getInventory().quantity(Currency.DIME));
+        assertEquals(1, coinReturn.getInventory().quantity(Currency.DIME));
     }
 
     /**
@@ -277,5 +286,13 @@ public class MachineTest {
                 .vend(Product.CHIPS)
                 .getInventory()
                 .quantity(Product.CHIPS));
+    }
+
+    /**
+     * Test that attempting to vend null simply says "SOLD OUT".
+     */
+    @Test
+    public final void whenVendNullSoldOut() {
+        assertEquals("SOLD OUT", machine.vend(null).getDisplay());
     }
 }
