@@ -4,6 +4,8 @@ apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: "jacoco"
 
+build.finalizedBy(jacocoTestReport)
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
