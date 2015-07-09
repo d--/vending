@@ -5,25 +5,33 @@ package kata.vending;
  * their prices.
  */
 public enum Product {
-    /** Cola, 1 dollar. */
-    COLA (100L),
+    /**
+     * Cola, 1 dollar.
+     */
+    COLA(100L),
 
-    /** Chips, 50 cents. */
-    CHIPS (50L),
+    /**
+     * Chips, 50 cents.
+     */
+    CHIPS(50L),
 
-    /** Candy, 65 cents. */
-    CANDY (65L);
+    /**
+     * Candy, 65 cents.
+     */
+    CANDY(65L);
 
     /**
      * The price of this product.
      */
     private final Long price;
+
     public Long getPrice() {
         return price;
     }
 
     /**
      * Product enum constructor.
+     *
      * @param price the price of the product
      */
     Product(final Long price) {

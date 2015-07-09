@@ -32,9 +32,10 @@ public class EnumsTest {
 
     /**
      * Simplest possible exercising "test" for our enums.
-     * @throws NoSuchMethodException yep
+     *
+     * @throws NoSuchMethodException     yep
      * @throws InvocationTargetException yep
-     * @throws IllegalAccessException yep
+     * @throws IllegalAccessException    yep
      */
     @Test
     public final void coverEnums() throws NoSuchMethodException,

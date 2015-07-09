@@ -12,13 +12,19 @@ public class InventoryTest {
      * A simple enum to throw in the Inventory generic.
      */
     public enum Fruit {
-        /** Delicious. */
+        /**
+         * Delicious.
+         */
         APPLE,
 
-        /** Also good. */
+        /**
+         * Also good.
+         */
         BANANA,
 
-        /** White means green. */
+        /**
+         * White means green.
+         */
         GRAPE
     }
 
@@ -49,8 +55,8 @@ public class InventoryTest {
     @Test
     public final void whenConstructorCalledQuantitiesAreZero() {
         assertEquals(0, empty.quantity(Fruit.APPLE)
-            + empty.quantity(Fruit.BANANA)
-            + empty.quantity(Fruit.GRAPE));
+                + empty.quantity(Fruit.BANANA)
+                + empty.quantity(Fruit.GRAPE));
     }
 
     /**
@@ -59,9 +65,9 @@ public class InventoryTest {
     @Test
     public final void whenAddItemItemQuantityIncreases() {
         Inventory<Fruit> fruits = empty
-            .add(Fruit.APPLE)
-            .add(Fruit.BANANA)
-            .add(Fruit.BANANA);
+                .add(Fruit.APPLE)
+                .add(Fruit.BANANA)
+                .add(Fruit.BANANA);
         assertEquals(1, fruits.quantity(Fruit.APPLE));
         assertEquals(2, fruits.quantity(Fruit.BANANA));
     }
@@ -109,12 +115,12 @@ public class InventoryTest {
     @Test
     public final void whenSubtractInventoryQuantitiesCorrect() {
         Inventory<Fruit> three = empty
-            .add(Fruit.APPLE)
-            .add(Fruit.BANANA)
-            .add(Fruit.GRAPE);
+                .add(Fruit.APPLE)
+                .add(Fruit.BANANA)
+                .add(Fruit.GRAPE);
         Inventory<Fruit> notBanana = empty
-            .add(Fruit.APPLE)
-            .add(Fruit.GRAPE);
+                .add(Fruit.APPLE)
+                .add(Fruit.GRAPE);
         Inventory<Fruit> justBanana = three.subtract(notBanana);
         assertEquals(0, justBanana.quantity(Fruit.APPLE));
         assertEquals(0, justBanana.quantity(Fruit.GRAPE));

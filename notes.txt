@@ -118,8 +118,14 @@ products.  Product inventory should theoretically be easy to implement now.
 
 We are now functionally complete with 100% test coverage.  Now to do:
 
-* Clean up javadoc
+x Clean up javadoc
 x Git rid of wrapped primitives
 * Write more thorough tests, check null values for explosions
 * Make machine tests less implicit / mapped to kata doc
 * Use the gradle application plugin and write a looped driver for play
+
+--
+
+Enums have enforced order.  I theoretically could use this to my advantage, but
+I'd rather leave the comparator / sorted list and let people define currencies
+as they see fit.

@@ -9,6 +9,7 @@ public final class Machine {
      * Bank representing the coin return slot of the machine.
      */
     private final Bank coinReturn;
+
     public Bank getCoinReturn() {
         return coinReturn;
     }
@@ -17,6 +18,7 @@ public final class Machine {
      * The current bank of currencies inserted by the vending machine customer.
      */
     private final Bank customerBank;
+
     public Bank getCustomerBank() {
         return customerBank;
     }
@@ -25,6 +27,7 @@ public final class Machine {
      * The current bank of currencies stocked in the machine.
      */
     private final Bank machineBank;
+
     public Bank getMachineBank() {
         return machineBank;
     }
@@ -33,6 +36,7 @@ public final class Machine {
      * The current inventory of products.
      */
     private final Inventory<Product> inventory;
+
     public Inventory<Product> getInventory() {
         return inventory;
     }
@@ -41,6 +45,7 @@ public final class Machine {
      * The current display of the vending machine.
      */
     private final String display;
+
     public String getDisplay() {
         return display;
     }
@@ -49,23 +54,34 @@ public final class Machine {
      * Builder for the immutable Machine class.
      */
     public static class Builder {
-        /** Builder coinReturn. */
+        /**
+         * Builder coinReturn.
+         */
         private Bank coinReturn;
 
-        /** Builder customerBank. */
+        /**
+         * Builder customerBank.
+         */
         private Bank customerBank;
 
-        /** Builder machineBank. */
+        /**
+         * Builder machineBank.
+         */
         private Bank machineBank;
 
-        /** Builder inventory. */
+        /**
+         * Builder inventory.
+         */
         private Inventory<Product> inventory;
 
-        /** Builder display. */
+        /**
+         * Builder display.
+         */
         private String display;
 
         /**
          * Builder setter for coinReturn.
+         *
          * @param coinReturn coinReturn
          * @return this Builder
          */
@@ -76,6 +92,7 @@ public final class Machine {
 
         /**
          * Builder setter for customerBank.
+         *
          * @param customerBank customerBank
          * @return this Builder
          */
@@ -86,6 +103,7 @@ public final class Machine {
 
         /**
          * Builder setter for machineBank.
+         *
          * @param machineBank machineBank
          * @return this Builder
          */
@@ -96,6 +114,7 @@ public final class Machine {
 
         /**
          * Builder setter for inventory.
+         *
          * @param inventory inventory
          * @return this Builder
          */
@@ -106,6 +125,7 @@ public final class Machine {
 
         /**
          * Builder setter for display.
+         *
          * @param display display
          * @return this Builder
          */
@@ -123,6 +143,7 @@ public final class Machine {
 
         /**
          * Machine copy constructor.
+         *
          * @param machine the machine to copy properties from
          */
         public Builder(final Machine machine) {
@@ -135,6 +156,7 @@ public final class Machine {
 
         /**
          * Build a new instance of Machine.
+         *
          * @return the new Machine instance
          */
         public final Machine build() {
@@ -145,7 +167,8 @@ public final class Machine {
     /**
      * Machine constructor.
      * Private to enforce creation through builder.
-     * @param builder the machine builder
+     *
+     * @param builder the Machine builder
      */
     private Machine(final Builder builder) {
         this.coinReturn = new Bank().deposit(builder.coinReturn);
@@ -161,9 +184,10 @@ public final class Machine {
     }
 
     /**
-     * Return the passed in balance as a formatted currency string.
-     * @param balance the balance to turn into a string
-     * @return the current balance string with a dollar sign
+     * Return the passed in balance as a formatted currency String.
+     *
+     * @param balance the balance to turn into a String
+     * @return the formatted balance String with a dollar sign
      */
     private String balanceAsString(final long balance) {
         final int oneDollar = 100;
@@ -179,6 +203,7 @@ public final class Machine {
 
     /**
      * Insert a coin into the vending machine.
+     *
      * @param coin the coin to insert
      * @return a vending machine with the coin inserted
      */
@@ -197,20 +222,22 @@ public final class Machine {
 
     /**
      * Returns any coins that are in the customer bank to the coin return.
-     * @return machine with appropriate coin return and customer bank
+     *
+     * @return Machine with appropriate coin return and customer bank
      */
     public Machine returnCoins() {
         final Bank newCustomerBank = new Bank();
         return new Builder(this)
-            .coinReturn(coinReturn.deposit(customerBank))
-            .customerBank(newCustomerBank)
-            .display(balanceAsString(newCustomerBank.calculateBalance()))
-            .build();
+                .coinReturn(coinReturn.deposit(customerBank))
+                .customerBank(newCustomerBank)
+                .display(balanceAsString(newCustomerBank.calculateBalance()))
+                .build();
     }
 
     /**
-     * Calculate whether the machine can make change for each of the products.
-     * @return true if the machine can make change, false if it can't
+     * Calculate whether the Machine can make change for each of the products.
+     *
+     * @return true if the Machine can make change, false if it can't
      */
     private boolean canMakeChange() {
         for (Product product : Product.values()) {
@@ -224,10 +251,11 @@ public final class Machine {
     }
 
     /**
-     * Checks the display of the machine.  This is an action that recalculates
+     * Checks the display of the Machine.  This is an action that recalculates
      * the display state.  This does not return the display.  This returns a
      * machine with the display having been checked.
-     * @return the machine with the display having been checked
+     *
+     * @return a Machine with the display having been checked
      */
     public Machine checkDisplay() {
         final Builder builder = new Builder(this);
@@ -244,7 +272,7 @@ public final class Machine {
     }
 
     /**
-     * Vends a product from the machine if customer funds are sufficient.
+     * Vends a product from the Machine if customer funds are sufficient.
      *
      * @param product the product to dispense
      * @return a new machine with properties appropriately adjusted
@@ -263,11 +291,11 @@ public final class Machine {
             final Bank changeBank = combined.makeChange(change);
             final Bank withdrawn = combined.withdraw(changeBank);
             builder
-                .machineBank(withdrawn)
-                .customerBank(new Bank())
-                .coinReturn(changeBank)
-                .inventory(inventory.subtract(product))
-                .display("THANK YOU");
+                    .machineBank(withdrawn)
+                    .customerBank(new Bank())
+                    .coinReturn(changeBank)
+                    .inventory(inventory.subtract(product))
+                    .display("THANK YOU");
         } else {
             builder.display("PRICE " + balanceAsString(product.getPrice()));
         }

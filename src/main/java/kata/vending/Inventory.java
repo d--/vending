@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * A generic inventory class that holds quantities of enums.
  * Immutable.
+ *
  * @param <T> an enum that you want to keep quantities of
  */
 public final class Inventory<T extends Enum> {
@@ -15,6 +16,7 @@ public final class Inventory<T extends Enum> {
      * Holds the quantities for each of the items.
      */
     private final Map<T, Integer> items;
+
     public Map<T, Integer> getItems() {
         return items;
     }
@@ -26,6 +28,7 @@ public final class Inventory<T extends Enum> {
 
     /**
      * Constructor to be called with enum.values().  Zeroes each quantity.
+     *
      * @param enums enum values to keep quantities of
      */
     public Inventory(final T[] enums) {
@@ -39,6 +42,7 @@ public final class Inventory<T extends Enum> {
 
     /**
      * Private constructor for creating a whole new Inventory from a raw map.
+     *
      * @param enums enum values to keep quantities of
      * @param items the internal representation of the inventory
      */
@@ -48,9 +52,10 @@ public final class Inventory<T extends Enum> {
     }
 
     /**
-     * Add an item to the inventory.
+     * Add an item to the Inventory.
+     *
      * @param item the item to add
-     * @return an inventory with the item added
+     * @return an Inventory with the item added
      */
     public Inventory<T> add(final T item) {
         if (item == null) {
@@ -62,9 +67,10 @@ public final class Inventory<T extends Enum> {
     }
 
     /**
-     * Add the entirety of an inventory to this inventory.
-     * @param inventory the inventory to add
-     * @return an inventory with the inventory added to this one
+     * Add the entirety of an Inventory to this Inventory.
+     *
+     * @param inventory the Inventory to add
+     * @return an Inventory with the Inventory added to this one
      */
     public Inventory<T> add(final Inventory<T> inventory) {
         if (inventory == null) {
@@ -78,9 +84,10 @@ public final class Inventory<T extends Enum> {
     }
 
     /**
-     * Subtract a single item from this inventory.
+     * Subtract a single item from this Inventory.
+     *
      * @param item the item to subtract
-     * @return an inventory with the item subtracted from this one
+     * @return an Inventory with the item subtracted from this one
      */
     public Inventory<T> subtract(final T item) {
         if (item == null) {
@@ -97,9 +104,10 @@ public final class Inventory<T extends Enum> {
     }
 
     /**
-     * Subtract the entirety of an inventory from this inventory.
-     * @param inventory the inventory to subtract
-     * @return an inventory with the inventory subtracted from this one
+     * Subtract the entirety of an Inventory from this Inventory.
+     *
+     * @param inventory the Inventory to subtract
+     * @return an Inventory with the Inventory subtracted from this one
      */
     public Inventory<T> subtract(final Inventory<T> inventory) {
         if (inventory == null) {
@@ -120,9 +128,10 @@ public final class Inventory<T extends Enum> {
     }
 
     /**
-     * Give the quantity of item in the inventory.
+     * Give the quantity of item in the Inventory.
+     *
      * @param item the item to quantify
-     * @return the quantity of the item in the inventory
+     * @return the quantity of the item in the Inventory
      */
     public int quantity(final T item) {
         if (items.containsKey(item)) {

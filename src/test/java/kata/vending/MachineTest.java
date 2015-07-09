@@ -57,16 +57,16 @@ public class MachineTest {
             }
         }
         machine = new Machine
-            .Builder()
-            .machineBank(machineBank)
-            .inventory(inventory)
-            .build();
+                .Builder()
+                .machineBank(machineBank)
+                .inventory(inventory)
+                .build();
     }
 
     /**
      * Test that when invalid coins (coins with no classification) are
      * inserted, they go into the coin return of the machine.
-     *
+     * <p/>
      * Test that valid coins do not end up in the coin return.
      */
     @Test
@@ -78,9 +78,9 @@ public class MachineTest {
                 .insertCoin(quarter)
                 .insertCoin(penny)
                 .getCoinReturn();
-        assertEquals(2, (int) coinReturn
-            .getInventory()
-            .quantity(Currency.UNKNOWN));
+        assertEquals(2, coinReturn
+                .getInventory()
+                .quantity(Currency.UNKNOWN));
     }
 
     /**
@@ -147,17 +147,17 @@ public class MachineTest {
     @Test
     public final void whenInsertCoinsCoinReturnReturnsCoins() {
         Machine filled = machine
-            .insertCoin(penny)
-            .insertCoin(quarter)
-            .insertCoin(dime)
-            .insertCoin(nickel);
+                .insertCoin(penny)
+                .insertCoin(quarter)
+                .insertCoin(dime)
+                .insertCoin(nickel);
         Machine returned = filled.returnCoins();
         Bank coinReturn = returned.getCoinReturn();
         Inventory<Currency> currencies = coinReturn.getInventory();
-        assertEquals(1, (int) currencies.quantity(Currency.UNKNOWN));
-        assertEquals(1, (int) currencies.quantity(Currency.QUARTER));
-        assertEquals(1, (int) currencies.quantity(Currency.DIME));
-        assertEquals(1, (int) currencies.quantity(Currency.NICKEL));
+        assertEquals(1, currencies.quantity(Currency.UNKNOWN));
+        assertEquals(1, currencies.quantity(Currency.QUARTER));
+        assertEquals(1, currencies.quantity(Currency.DIME));
+        assertEquals(1, currencies.quantity(Currency.NICKEL));
     }
 
     /**
@@ -167,9 +167,9 @@ public class MachineTest {
     @Test
     public final void whenEnoughMoneyVendDisplayIsCorrect() {
         Machine vended = machine
-            .insertCoin(quarter)
-            .insertCoin(quarter)
-            .vend(Product.CHIPS);
+                .insertCoin(quarter)
+                .insertCoin(quarter)
+                .vend(Product.CHIPS);
         String vendingDisplay = vended.getDisplay();
         assertEquals("THANK YOU", vendingDisplay);
         String displayAfter = vended.checkDisplay().getDisplay();
@@ -183,8 +183,8 @@ public class MachineTest {
     @Test
     public final void whenNotEnoughMoneyVendDisplayIsCorrect() {
         Machine nope = machine
-            .insertCoin(nickel)
-            .vend(Product.CANDY);
+                .insertCoin(nickel)
+                .vend(Product.CANDY);
         String vendingDisplay = nope.getDisplay();
         assertEquals("PRICE $0.65", vendingDisplay);
         String displayAfter = nope.checkDisplay().getDisplay();
@@ -199,19 +199,19 @@ public class MachineTest {
     public final void whenTooMuchMoneyVendMakesCorrectChange() {
         Bank bankWithDime = new Bank().deposit(Currency.DIME);
         Machine machineWithDime = new Machine
-            .Builder()
-            .machineBank(bankWithDime)
-            .inventory(inventory)
-            .build();
+                .Builder()
+                .machineBank(bankWithDime)
+                .inventory(inventory)
+                .build();
         Machine vended = machineWithDime
-            .insertCoin(quarter)
-            .insertCoin(quarter)
-            .insertCoin(quarter)
-            .vend(Product.CANDY);
+                .insertCoin(quarter)
+                .insertCoin(quarter)
+                .insertCoin(quarter)
+                .vend(Product.CANDY);
         Bank coinReturn = vended.getCoinReturn();
         assertEquals(Currency.DIME.getCents(), coinReturn.calculateBalance());
         assertEquals(1,
-            (int) coinReturn.getInventory().quantity(Currency.DIME));
+                coinReturn.getInventory().quantity(Currency.DIME));
     }
 
     /**
@@ -222,8 +222,8 @@ public class MachineTest {
     public final void whenNotEnoughChangeDisplayExactChangeOnly() {
         Machine machineWithBank = new Machine.Builder().build();
         assertEquals("EXACT CHANGE ONLY", machineWithBank
-            .checkDisplay()
-            .getDisplay());
+                .checkDisplay()
+                .getDisplay());
     }
 
     /**
@@ -240,9 +240,9 @@ public class MachineTest {
                 .insertCoin(quarter)
                 .vend(Product.CANDY);
         Bank coinReturn = vended.getCoinReturn();
-        assertEquals(0, (long) coinReturn.calculateBalance());
-        assertEquals(0, (long) vended.getCustomerBank().calculateBalance());
-        assertEquals(75L, (long) vended.getMachineBank().calculateBalance());
+        assertEquals(0, coinReturn.calculateBalance());
+        assertEquals(0, vended.getCustomerBank().calculateBalance());
+        assertEquals(75L, vended.getMachineBank().calculateBalance());
         assertEquals("THANK YOU", vended.getDisplay());
         assertEquals("EXACT CHANGE ONLY", vended.checkDisplay().getDisplay());
     }
@@ -262,8 +262,8 @@ public class MachineTest {
                 .vend(Product.CANDY);
 
         assertEquals("SOLD OUT", prepped.getDisplay());
-        assertEquals(0, (long) prepped.getCoinReturn().calculateBalance());
-        assertEquals(5L, (long) prepped.getCustomerBank().calculateBalance());
+        assertEquals(0, prepped.getCoinReturn().calculateBalance());
+        assertEquals(5L, prepped.getCustomerBank().calculateBalance());
     }
 
     /**
@@ -271,7 +271,7 @@ public class MachineTest {
      */
     @Test
     public final void whenVendProductInventoryCorrect() {
-        assertEquals(inventory.quantity(Product.CHIPS) - 1, (int) machine
+        assertEquals(inventory.quantity(Product.CHIPS) - 1, machine
                 .insertCoin(quarter)
                 .insertCoin(quarter)
                 .vend(Product.CHIPS)

@@ -11,12 +11,14 @@ public final class Bank {
      * Inventory of currencies for the bank.
      */
     private final Inventory<Currency> inventory;
+
     public Inventory<Currency> getInventory() {
         return inventory;
     }
 
     /**
      * Calculate the balance (in cents) of the currently held currencies.
+     *
      * @return the current balance (in cents)
      */
     public long calculateBalance() {
@@ -29,9 +31,12 @@ public final class Bank {
 
     /**
      * Create a bank made up of currencies from this bank that add up as close
-     * as possible to the change amount requested.
+     * as possible to the change amount requested.  Exact change is not
+     * guaranteed.  It's a good idea to check that the calculated balance is
+     * the same as the amount you expect.
+     *
      * @param amount the amount of change needed
-     * @return a bank of change made from as much currency that could be taken
+     * @return a bank of change made from as much currency that could be used
      */
     public Bank makeChange(final long amount) {
         long change = amount;
@@ -50,14 +55,15 @@ public final class Bank {
     }
 
     /**
-     * Bank constructor.  Fills out a new bank with 0 amounts for each currency.
+     * Bank constructor.  Fills out a new Bank with 0 amounts for each currency.
      */
     public Bank() {
         this.inventory = new Inventory<>(Currency.values());
     }
 
     /**
-     * Private bank constructor.  Used for returning new, modified instances.
+     * Private Bank constructor.  Used for returning new, modified instances.
+     *
      * @param inventory the new inventory
      */
     private Bank(final Inventory<Currency> inventory) {
@@ -65,9 +71,10 @@ public final class Bank {
     }
 
     /**
-     * Deposit the currencies from the incoming bank into this bank.
-     * @param bank incoming bank
-     * @return new bank with this bank's currencies, incoming bank's currencies
+     * Deposit the currencies from the incoming Bank into this Bank.
+     *
+     * @param bank incoming Bank
+     * @return new Bank with this Bank's currencies, incoming Bank's currencies
      */
     public Bank deposit(final Bank bank) {
         if (bank == null) {
@@ -77,9 +84,10 @@ public final class Bank {
     }
 
     /**
-     * Deposit the currency incoming into this bank.
+     * Deposit the currency incoming into this Bank.
+     *
      * @param currency incoming currency
-     * @return new bank with this bank's currencies, incoming currency
+     * @return new Bank with this Bank's currencies, incoming currency
      */
     public Bank deposit(final Currency currency) {
         if (currency == null) {
@@ -91,8 +99,9 @@ public final class Bank {
     /**
      * Withdraws the currencies from the passed in Bank from this Bank.  If
      * there aren't enough of any particular currency, set the quantity to 0.
-     * @param bank the bank of currencies to withdraw
-     * @return a bank with the currencies of the passed bank withdrawn
+     *
+     * @param bank the Bank of currencies to withdraw
+     * @return a Bank with the currencies of the passed Bank withdrawn
      */
     public Bank withdraw(final Bank bank) {
         if (bank == null) {

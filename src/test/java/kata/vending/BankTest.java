@@ -27,8 +27,8 @@ public class BankTest {
     @Test
     public final void whenDepositBlankBankIntoBlankBankBalanceIsZero() {
         assertEquals(0, bank
-            .deposit(new Bank())
-            .calculateBalance());
+                .deposit(new Bank())
+                .calculateBalance());
     }
 
     /**
@@ -133,9 +133,9 @@ public class BankTest {
         assertEquals(50L, nickels
                 .makeChange(50L)
                 .calculateBalance());
-        assertEquals(5, (int) nickels
-            .getInventory()
-            .quantity(Currency.NICKEL));
+        assertEquals(5, nickels
+                .getInventory()
+                .quantity(Currency.NICKEL));
     }
 
     /**
